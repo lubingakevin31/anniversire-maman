@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joyeux Anniversaire Maman ! 🎂✨</title>
+  
+  <!-- Polices Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    /* ==========================================
+       1. VARIABLES & RÉINITIALISATION
+       ========================================== */
+    :root {
+      --bg-dark: #070a11;
+      --bg-card: #0f1626;
+      --bg-card-hover: #162035;
+      --gold-main: #d4af37;
+      --gold-light: #f3e5ab;
+      --gold-glow: rgba(212, 175, 55, 0.25);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --font-title: 'Cinzel', serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* ==========================================
+       2. HEADER / STICKY NAVBAR
+       ========================================== */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(7, 10, 17, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+      padding: 0.8rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-100%);
+      transition: all 0.4s ease-in-out;
+    }
+
+    header.visible-nav {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .logo {
+      font-family: var(--font-title);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--gold-main);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-main);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--gold-main);
+    }
+
+    .btn-nav {
+      background: linear-gradient(135deg, var(--gold-main), var(--gold-light));
+      color: #000;
+      padding: 0.5rem 1.2rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: transform 0.3s;
+      display: inline-block;
+    }
+
+    .btn-nav:hover {
+      transform: scale(1.05);
+    }
+
+    .btn-hero-rsvp {
+      background: linear-gradient(135deg, var(--gold-main), var(--gold-light));
+      color: #000;
+      padding: 0.5rem 1.2rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-block;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+
+    .btn-hero-rsvp:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+    }
+
+    .burger-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--gold-main);
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+
+    /* ==========================================
+       3. HERO EXCLUSIF
+       ========================================== */
+    .hero-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 2rem 1rem;
+    }
+
+    .hero-bg-image {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center;
+      opacity: 0.5;
+      filter: brightness(0.85) contrast(1.05);
+      z-index: 1;
+    }
+
+    .hero-watermark {
+      position: absolute;
+      font-family: var(--font-title);
+      font-size: clamp(4rem, 16vw, 13rem);
+      font-weight: 800;
+      color: rgba(212, 175, 55, 0.08);
+      white-space: nowrap;
+      user-select: none;
+      z-index: 2;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .hero-ribbon {
+      position: absolute;
+      width: 150%;
+      height: 60px;
+      background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.35), transparent);
+      transform: rotate(-12deg);
+      z-index: 2;
+      animation: ribbonFlow 8s infinite linear;
+    }
+
+    @keyframes ribbonFlow {
+      0% { transform: rotate(-12deg) translateY(-40px); }
+      50% { transform: rotate(-12deg) translateY(40px); }
+      100% { transform: rotate(-12deg) translateY(-40px); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    .hero-text h1 {
+      font-family: var(--font-title);
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+      color: #fff;
+      line-height: 1.3;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.9);
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: var(--gold-light);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
+      40% { transform: translate(-50%, -10px); }
+      60% { transform: translate(-50%, -5px); }
+    }
+
+    /* ==========================================
+       4. SECTIONS (ESPACES REDUITS)
+       ========================================== */
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .section-title h2 {
+      font-family: var(--font-title);
+      font-size: 2rem;
+      color: var(--gold-main);
+      margin-bottom: 0.3rem;
+    }
+
+    .section-title p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    #canvas-container {
+      width: 100%;
+      height: 50vh;
+      min-height: 380px;
+      position: relative;
+      margin: 0 auto;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    #canvas-container:active {
+      cursor: grabbing;
+    }
+
+    .canvas-hint {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 22, 38, 0.8);
+      border: 1px solid var(--gold-main);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      color: var(--gold-light);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* ==========================================
+       5. PRESENTATION & CHIFFRES CLES
+       ========================================== */
+    .bio-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    @media (min-width: 768px) {
+      .bio-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      padding: 1rem;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: var(--font-title);
+      font-size: 2rem;
+      color: var(--gold-light);
+      font-weight: 700;
+    }
+
+    .bio-portrait-frame {
+      position: relative;
+      border-radius: 20px;
+      padding: 8px;
+      background: linear-gradient(135deg, var(--gold-main), transparent, var(--gold-light));
+    }
+
+    .bio-portrait-frame img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 12px;
+      display: block;
+    }
+
+    .bio-bullets {
+      list-style: none;
+      margin-top: 1rem;
+    }
+
+    .bio-bullets li {
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .bio-bullets li::before {
+      content: "✦";
+      color: var(--gold-main);
+    }
+
+    /* ==========================================
+       6. PROGRAMME TABS
+       ========================================== */
+    .tabs-wrapper {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .tabs-wrapper { grid-template-columns: 280px 1fr; }
+    }
+
+    .tab-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .tab-btn {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      padding: 1rem;
+      border-radius: 12px;
+      text-align: left;
+      font-family: var(--font-body);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--gold-main);
+      color: var(--gold-main);
+    }
+
+    .tab-content-panel {
+      display: none;
+      background: var(--bg-card);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+
+    .tab-content-panel.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .tab-content-panel img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    /* ==========================================
+       7. TIMELINE
+       ========================================== */
+    .timeline {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: var(--gold-main);
+      transform: translateX(-50%);
+    }
+
+    .timeline-item {
+      padding: 1.5rem 0;
+      position: relative;
+      width: 50%;
+    }
+
+    .timeline-item.left { left: 0; text-align: right; padding-right: 2.5rem; }
+    .timeline-item.right { left: 50%; text-align: left; padding-left: 2.5rem; }
+
+    .timeline-dot {
+      position: absolute;
+      top: 2rem;
+      width: 16px; height: 16px;
+      background: var(--gold-main);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--gold-main);
+    }
+
+    .left .timeline-dot { right: -8px; }
+    .right .timeline-dot { left: -8px; }
+
+    .timeline-content {
+      background: var(--bg-card);
+      padding: 1.2rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* ==========================================
+       8. FOOTER & ANIMATIONS
+       ========================================== */
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      background: #04060a;
+      border-top: 1px solid rgba(212, 175, 55, 0.15);
+      color: var(--text-muted);
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%; left: 0; width: 100%;
+        background: var(--bg-dark);
+        flex-direction: column;
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--gold-main);
+      }
+      .nav-links.mobile-active { display: flex; }
+      .burger-btn { display: block; }
+      .timeline::before { left: 20px; }
+      .timeline-item { width: 100%; padding-left: 2.5rem !important; text-align: left !important; }
+      .timeline-item.left, .timeline-item.right { left: 0; }
+      .left .timeline-dot, .right .timeline-dot { left: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- STICKY NAVBAR -->
+  <header id="mainHeader">
+    <div class="logo">Maman • Corinne</div>
+    <button class="burger-btn" onclick="toggleMenu()">☰</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="kevin.html">KEVIN</a></li>
+      <li><a href="julson.html">JULSON</a></li>
+      <li><a href="gracia.html">GRACIA</a></li>
+      <li><a href="david.html">DAVID</a></li>
+      <li><a href="joelle.html">JOELLE</a></li>
+      <li><a href="entre.html" class="btn-nav">Les audios</a></li>
+    </ul>
+  </header>
+
+  <!-- HERO SECTION -->
+  <div class="hero-container">
+    <img src="./IMG/MAMAN1.png" alt="Joyeux Anniversaire Maman" class="hero-bg-image">
+    <div class="hero-watermark">anniversaire 2026</div>
+    <div class="hero-ribbon"></div>
+    
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1>Joyeux Anniversaire Maman ! 🎉✨</h1>
+      </div>
+      <div>
+        <a href="#jubile" class="btn-hero-rsvp">Découvrir</a>
+      </div>
+    </div>
+
+    <div class="scroll-indicator">
+      <span>Découvrir</span>
+      <span>↓</span>
+    </div>
+  </div>
+
+  <!-- CARROUSEL 3D THREE.JS -->
+  <div id="canvas-container" class="fade-in">
+    <div class="canvas-hint">👈 Glissez pour faire tourner la galerie 👉</div>
+  </div>
+
+  <!-- SECTION PRESENTATION -->
+  <section id="jubile" class="fade-in">
+    <div class="bio-grid">
+      <div>
+        <h2 style="font-family: var(--font-title); color: var(--gold-main); font-size: 1.8rem;">Une vie à Célébrer</h2>
+        <p style="color: var(--text-muted); margin-top: 0.8rem;"> En ce jour spécial, nous voulons te témoigner toute notre affection, notre force et surtout tout l’amour que nous partageons au sein de notre famille. 🥰🤗
+          Que cette nouvelle année de ta vie soit remplie de bonheur, de santé, de réussite et de beaux moments. 🎂🎉🙏
+          Joyeux anniversaire à toi ! ❤️🎊🥳
+        </p>
+        
+        <ul class="bio-bullets">
+          <li>Une vie consacrée au bonheur des siens</li>
+          <li>Des rires, des voyages et des anecdotes inoubliables</li>
+          <li>Un rayonnement lumineux pour tous ses proches</li>
+        </ul>
+
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-number">36</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Bougies Éclatantes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">2026</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Année</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bio-portrait-frame">
+        <img src="./IMG/maman.jpeg" alt="Maman Portrait Officiel">
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRAMME INTERACTIF (TABS) -->
+  <section id="programme" class="fade-in">
+    <div class="section-title">
+      <h2>4 belles choses qui vous attendent</h2>
+      <p>Découvrez les différentes phases de votre vie future</p>
+    </div>
+
+    <div class="tabs-wrapper">
+      <div class="tab-buttons">
+        <button class="tab-btn active" onclick="openTab(event, 'cocktail')">1. 🌸 Une belle vie</button>
+        <button class="tab-btn" onclick="openTab(event, 'diner')">2. 🕊️ Une paix profonde</button>
+        <button class="tab-btn" onclick="openTab(event, 'soiree')">3. 🌟 Une grande réussite</button>
+        <button class="tab-btn" onclick="openTab(event, 'brunch')">4. 🙏 Une bonne santé</button>
+      </div>
+
+      <div class="tab-content">
+        <div id="cocktail" class="tab-content-panel active">
+          <img src="./IMG/vie.jpeg" alt="Une belle vie">
+          <h3 style="color: var(--gold-main);">🌸 Une belle vie</h3>
+          <p style="color: var(--text-muted); margin-top: 0.5rem;">Remplie de bonheur et de beaux souvenirs.</p>
+        </div>
+        <div id="diner" class="tab-content-panel">
+          <img src="./IMG/paix.jpeg" alt="Une paix profonde">
+          <h3 style="color: var(--gold-main);">🕊️ Une paix profonde</h3>
+          <p style="color: var(--text-muted); margin-top: 0.5rem;">Accompagnée des témoignages chaleureux de la famille et des amis.</p>
+        </div>
+        <div id="soiree" class="tab-content-panel">
+          <img src="./IMG/reussite.jpeg" alt="Une grande réussite">
+          <h3 style="color: var(--gold-main);">🌟 Une grande réussite</h3>
+          <p style="color: var(--text-muted); margin-top: 0.5rem;">Des projets accomplis et un avenir resplendissant.</p>
+        </div>
+        <div id="brunch" class="tab-content-panel">
+          <img src="./IMG/sante.jpeg" alt="Une bonne santé">
+          <h3 style="color: var(--gold-main);">🙏 Une bonne santé</h3>
+          <p style="color: var(--text-muted); margin-top: 0.5rem;">La force et l'énergie quotidienne entourée de ceux que tu aimes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section id="timeline" class="fade-in">
+    <div class="section-title">
+      <h2>Famille restreinte</h2>
+      <p>Parents et quelques membres de la famille restreinte ❤️</p>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item left">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span style="color: var(--gold-main); font-weight:700;">👨‍👩‍👧 Parents</span>
+          <h4>VIP</h4>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">Papa et Maman Sékélé ❤️</p>
+        </div>
+      </div>
+
+      <div class="timeline-item right">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span style="color: var(--gold-main); font-weight:700;">👧👦 Enfants</span>
+          <h4>Filles et garçon</h4>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">Kevin, Elianne et Merciane 🥰</p>
+        </div>
+      </div>
+
+      <div class="timeline-item left">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span style="color: var(--gold-main); font-weight:700;">👫 Frères et sœurs</span>
+          <h4>TOUS</h4>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">Mireille, Joëlle, Sophie, Régis, David et Alphonsine 🤗</p>
+        </div>
+      </div>
+
+      <div class="timeline-item right">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span style="color: var(--gold-main); font-weight:700;">👶 Nièces et neveux</span>
+          <h4>Certains ne sont pas cités</h4>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">Mélissa, Bryan, Sophianne, Mélanie, Christiannah… ❤️✨</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALERIE SOUVENIRS -->
+  <section id="galerie" class="fade-in">
+    <div class="section-title">
+      <h2>Livre d'Or des souhaits</h2>
+      <p>Les gentils mots partagés par la famille et les amis</p>
+      <a href="entre.html" class="btn-nav" style="margin-top: 1rem;">Cliquer ici</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 - Créé avec passion pour Maman Corinne.</p>
+    <p style="color: var(--gold-main); font-size: 1.1rem; margin-top: 0.5rem;">✦ Joyeux Anniversaire ! ✦</p>
+  </footer>
+
+  <!-- JAVASCRIPT -->
+  <script>
+    /* 1. STICKY NAVBAR AU SCROLL */
+    const header = document.getElementById('mainHeader');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 80) {
+        header.classList.add('visible-nav');
+      } else {
+        header.classList.remove('visible-nav');
+      }
+    });
+
+    /* 2. NAVIGATION MOBILE BURGER */
+    function toggleMenu() {
+      document.getElementById('navLinks').classList.toggle('mobile-active');
+    }
+
+    /* 3. PROGRAMME TABS */
+    function openTab(evt, tabName) {
+      const panels = document.querySelectorAll('.tab-content-panel');
+      const btns = document.querySelectorAll('.tab-btn');
+      
+      panels.forEach(p => p.classList.remove('active'));
+      btns.forEach(b => b.classList.remove('active'));
+
+      document.getElementById(tabName).classList.add('active');
+      evt.currentTarget.classList.add('active');
+    }
+
+    /* 4. INTERSECTION OBSERVER */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    /* 5. CANVAS DYNAMIQUE POUR CARTE PLACEHOLDER (Cadre vide élégant) */
+    function createPlaceholderTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 360;
+      canvas.height = 500;
+      const ctx = canvas.getContext('2d');
+
+      const grad = ctx.createLinearGradient(0, 0, 0, 500);
+      grad.addColorStop(0, '#0f1626');
+      grad.addColorStop(1, '#070a11');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 360, 500);
+
+      ctx.strokeStyle = '#d4af37';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(15, 15, 330, 470);
+
+      ctx.fillStyle = '#f3e5ab';
+      ctx.font = '32px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('✦', 180, 230);
+      ctx.font = '18px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('Souvenir', 180, 270);
+
+      return new THREE.CanvasTexture(canvas);
+    }
+
+    /* 6. THREE.JS CARROUSEL 3D COMPLET */
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x070a11, 0.04);
+
+    const camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.set(0, 0, 7.5);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+    const goldPointLight = new THREE.PointLight(0xd4af37, 2, 20);
+    goldPointLight.position.set(0, 3, 5);
+    scene.add(goldPointLight);
+
+    const galleryGroup = new THREE.Group();
+    scene.add(galleryGroup);
+
+    const photoUrls = [
+      './IMG/MAMAN2.png',
+      './IMG/MAMAN3.png',
+      './IMG/MAMAN4.png',
+      './IMG/MAMAN5.png',
+      './IMG/MAMAN6.png',
+      './IMG/MAMAN7.png',
+      './IMG/MAMAN8.png',
+      './IMG/MAMAN9.png',
+      './IMG/MAMAN10.png',
+      './IMG/MAMAN11.png'
+    ];
+
+    const cardCount = photoUrls.length;
+    const radius = 4.8;
+
+    const textureLoader = new THREE.TextureLoader();
+    const placeholderTexture = createPlaceholderTexture();
+
+    for (let i = 0; i < cardCount; i++) {
+      const angle = (i / cardCount) * Math.PI * 2;
+
+      // Chargement sécurisé des textures avec texture par défaut si erreur
+      const texture = textureLoader.load(
+        photoUrls[i],
+        undefined,
+        undefined,
+        () => placeholderTexture
+      );
+
+      const cardMesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(1.8, 2.5),
+        new THREE.MeshStandardMaterial({ map: texture, side: THREE.DoubleSide })
+      );
+      cardMesh.position.set(Math.sin(angle) * radius, 0, Math.cos(angle) * radius);
+      cardMesh.rotation.y = angle;
+
+      const frameMesh = new THREE.Mesh(
+        new THREE.BoxGeometry(1.88, 2.58, 0.05),
+        new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.9, roughness: 0.2 })
+      );
+      frameMesh.position.z = -0.03;
+      cardMesh.add(frameMesh);
+      galleryGroup.add(cardMesh);
+    }
+
+    /* INTERACTION SOURIS ET TOUCH MOBILE */
+    let isDragging = false;
+    let previousX = 0;
+    let targetRotationY = 0;
+
+    const startDrag = (x) => {
+      isDragging = true;
+      previousX = x;
+    };
+
+    const stopDrag = () => {
+      isDragging = false;
+    };
+
+    const moveDrag = (x) => {
+      if (isDragging) {
+        targetRotationY += (x - previousX) * 0.005;
+        previousX = x;
+      }
+    };
+
+    container.addEventListener('mousedown', (e) => startDrag(e.clientX));
+    window.addEventListener('mouseup', stopDrag);
+    window.addEventListener('mousemove', (e) => moveDrag(e.clientX));
+
+    container.addEventListener('touchstart', (e) => startDrag(e.touches[0].clientX), { passive: true });
+    window.addEventListener('touchend', stopDrag);
+    window.addEventListener('touchmove', (e) => moveDrag(e.touches[0].clientX), { passive: true });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      targetRotationY += 0.002;
+      galleryGroup.rotation.y += (targetRotationY - galleryGroup.rotation.y) * 0.05;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+  </script>
+</body>
+</html>

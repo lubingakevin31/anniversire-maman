@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Message de Julson | Joyeux Anniversaire Maman</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #070a11;
+      --bg-card: #0f1626;
+      --gold-main: #d4af37;
+      --gold-light: #f3e5ab;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --font-title: 'Cinzel', serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+    .card-container {
+      background: var(--bg-card);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 20px;
+      max-width: 600px;
+      width: 100%;
+      padding: 2.5rem;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .author-name {
+      font-family: var(--font-title);
+      font-size: 2rem;
+      color: var(--gold-light);
+      margin-bottom: 0.3rem;
+    }
+    .author-role {
+      font-size: 0.9rem;
+      color: var(--gold-main);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 1.5rem;
+    }
+    /* IMAGE FORMAT 4:5 */
+    .author-photo {
+      width: 200px;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 3px solid var(--gold-main);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+      margin: 0 auto 1.5rem auto;
+      display: block;
+    }
+    .message {
+      font-size: 1.05rem;
+      color: var(--text-main);
+      line-height: 1.8;
+      font-style: italic;
+      margin-bottom: 2rem;
+    }
+    .btn-back {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--gold-main), var(--gold-light));
+      color: #000;
+      padding: 0.75rem 1.8rem;
+      border-radius: 25px;
+      font-weight: 700;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      transition: transform 0.3s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-back:hover { transform: scale(1.05); }
+        /* ==========================================
+       8. FOOTER & ANIMATIONS
+       ========================================== */
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      background: #04060a;
+      border-top: 1px solid rgba(212, 175, 55, 0.15);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="card-container">
+    <h1 class="author-name">Julson</h1>
+    <div class="author-role">Fils</div>
+    <img src="./IMG/JULSON.png" alt="Julson" class="author-photo">
+    <p class="message">
+      Maman, je te souhaite beaucoup , de santé, de paix , et des belles réussites.👌✅ .que cette nouvelle année de la vie t'apporte encore plus de sourire et des beaux moments 🙏😁✨🎂
+    </p>
+    <button onclick="history.back()" class="btn-back">← Retour</button>
+  </div>
+   <!-- FOOTER -->
+  <footer>
+    <p>© 2026 - Créé avec passion pour Maman Corinne.</p>
+    <p style="color: var(--gold-main); font-size: 1.1rem; margin-top: 0.5rem;">✦ Joyeux Anniversaire ! ✦</p>
+  </footer>
+</body>
+</html>
